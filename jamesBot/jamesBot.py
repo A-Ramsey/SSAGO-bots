@@ -5,11 +5,11 @@ import discord
 from dotenv import load_dotenv
 from googletrans import Translator
 
-
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-class CustomClient(discord.Client):
+
+class JamesTheSheep(discord.Client):
 
     def __init__(self, **options):
         self.translationFrequency = 30
@@ -19,13 +19,13 @@ class CustomClient(discord.Client):
     async def on_ready(self):
         print(f'{self.user} has connected to Discord!')
 
-    async def on_message(self,message):
+    async def on_message(self, message):
         if message.author == client.user:
             return
         if self.translationEnabled and randint(0, self.translationFrequency) == 1:
             translator = Translator()
 
-            result = translator.translate(message.content,dest='cy')
+            result = translator.translate(message.content, dest='cy')
             await message.channel.send('Did you know you could say it in welsh like this: ```' + result.text + '```')
 
         if message.content.lower().startswith('!jamesthesheep'):
@@ -35,7 +35,7 @@ class CustomClient(discord.Client):
                     self.translationFrequency = int(command[2])
                     await message.channel.send('frequency now 1/' + command[2])
                 else:
-                    message.channel.send('Invalid usage')
+                    await message.channel.send('Invalid usage')
             elif command[1] == 'shutup':
                 self.translationEnabled = False
                 await  message.channel.send('Fine :( BAAAA')
@@ -49,7 +49,5 @@ class CustomClient(discord.Client):
                 message.channel.send('Invalid command, see `!JamesTheSheep help` for usage')
 
 
-
-
-client = CustomClient()
+client = JamesTheSheep()
 client.run(TOKEN)
