@@ -28,9 +28,14 @@ class JamesTheSheep(discord.Client):
             result = translator.translate(message.content, dest='cy')
             await message.channel.send('Did you know you could say it in welsh like this: ```' + result.text + '```')
 
-        if message.content.lower().startswith('!jamesthesheep'):
+        if message.mentions and message.mentions[0].name == 'JamesTheSheep':
             command = message.content.lower().split(' ')
-            if command[1] == 'setfrequency':
+            if len(command) == 1:
+                await message.channel.send('I am here baaa')
+                return
+            elif command[1] == 'steal':
+                await message.channel.send('I\'m a none stealable you fool. -10 points to griffindor.')
+            elif command[1] == 'setfrequency':
                 if len(command) >= 3 and command[2].isnumeric():
                     self.translationFrequency = int(command[2])
                     await message.channel.send('frequency now 1/' + command[2])
@@ -42,11 +47,19 @@ class JamesTheSheep(discord.Client):
             elif command[1] == 'resumetalking':
                 self.translationEnabled = True
                 await  message.channel.send('Yay :) BAAAA')
+            elif command[1] == 'howareyou?':
+                m = 'Alive and well :) Baaaa\n'
+                if self.translationEnabled:
+                    m = m + 'I will translate every 1/'+ str(self.translationFrequency)
+                else:
+                    m = m + 'I was told to shutup :( baaa please re-enable me... baaaa'
+                await message.channel.send(m)
             elif command[1] == 'help':
-                await message.channel.send(' shutup - tells James to shutup \n resumetalking - tell james he can talk '
+                await message.channel.send('shutup - tells James to shutup \n resumeTalking - tell james he can '
+                                           'talk.\n HowAreYou? -  asks him how he is '
                                            '\n setfrequency X -  set frequency of his translation attempts.')
             else:
-                message.channel.send('Invalid command, see `!JamesTheSheep help` for usage')
+               await message.channel.send('I don\'t understand sorry, have a nice day, baaa.')
 
 
 client = JamesTheSheep()
