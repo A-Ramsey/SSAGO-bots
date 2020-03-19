@@ -16,8 +16,6 @@ class CustomClient(discord.Client):
         self.translationEnabled = True
         super().__init__(**options)
 
-
-
     async def on_ready(self):
         print(f'{self.user} has connected to Discord!')
 
@@ -33,8 +31,11 @@ class CustomClient(discord.Client):
         if message.content.lower().startswith('!jamesthesheep'):
             command = message.content.lower().split(' ')
             if command[1] == 'setfrequency':
-                self.translationFrequency = int(command[2])
-                await message.channel.send('frequency now 1/' + command[2])
+                if len(command) >= 3 and command[2].isnumeric():
+                    self.translationFrequency = int(command[2])
+                    await message.channel.send('frequency now 1/' + command[2])
+                else:
+                    message.channel.send('Invalid usage')
             elif command[1] == 'shutup':
                 self.translationEnabled = False
                 await  message.channel.send('Fine :( BAAAA')
@@ -44,6 +45,8 @@ class CustomClient(discord.Client):
             elif command[1] == 'help':
                 await message.channel.send(' shutup - tells James to shutup \n resumetalking - tell james he can talk '
                                            '\n setfrequency X -  set frequency of his translation attempts.')
+            else:
+                message.channel.send('Invalid command, see `!JamesTheSheep help` for usage')
 
 
 
