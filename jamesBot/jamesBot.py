@@ -124,7 +124,7 @@ class JamesTheSheep(discord.Client):
         return True
 
     async def cmd_contact(self,message,command):
-        if len(command) >= 2 and command[1] in self.known.keys:
+        if len(command) >= 2 and command[1] in self.known.keys():
             await message.channel.send('mention Id of '+command[1] + ' is ' + self.known.get(command[1]))
             return True
 
