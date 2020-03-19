@@ -26,7 +26,6 @@ class JamesTheSheep(discord.Client):
         self.translationEnabled = True
         self.stealAttempts = []
         self.friends = {'<@690257560531763204>', '<@678903558828982274>', '<@689981551534014576>'}
-        self.known = {'Oli':'<@678903558828982274>'}
         super().__init__(**options)
 
     async def on_ready(self):
@@ -36,7 +35,7 @@ class JamesTheSheep(discord.Client):
         if message.author == client.user:
             return
 
-        self.known[message.author.display_name] = message.author.mention
+        print(message.author.display_name, message.author.mention)
 
         if self.translationEnabled and message.author.display_name == 'RoBot':
             print(message.content)
@@ -119,14 +118,11 @@ class JamesTheSheep(discord.Client):
         if len(command) >= 2 and command[1].isnumeric():
             self.translationFrequency = int(command[1])
             await message.channel.send('frequency now 1/' + command[1])
+            return True
         else:
             await message.channel.send('Invalid usage of setfrequency')
         return True
 
-    async def cmd_contact(self,message,command):
-        if len(command) >= 2 and command[1] in self.known.keys():
-            await message.channel.send('mention Id of '+command[1] + ' is ' + self.known.get(command[1]))
-            return True
 
     async def cmd_catch(self,message,command):
         f = self.friends.pop()
