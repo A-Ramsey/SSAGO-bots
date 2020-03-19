@@ -1,4 +1,5 @@
 import os
+import time
 from random import randint
 
 import discord
@@ -16,6 +17,7 @@ class JamesTheSheep(discord.Client):
         self.translationFrequency = 30
         self.translationEnabled = True
         self.stealAttempts = []
+        self.reply = True
         super().__init__(**options)
 
     async def on_ready(self):
@@ -26,18 +28,23 @@ class JamesTheSheep(discord.Client):
             return
 
         await self.translate(message)
+        print(message.author.display_name)
 
         if message.mentions and message.mentions[0].name == 'JamesTheSheep':
             m = message.content[22:].strip()
+            print(m)
             if len(m) == 0:
                 await message.channel.send('Hi, I\'m here. baaaa')
             elif await self.converse(message,m):
                 print('was social')
-            elif await self.commands(message,m):
+            elif await self.runCommand(message,m):
                 print('did as instructed')
             else:
                 await message.channel.send('Sorry but I didn\'t quite get that. baaaaaa')
-
+        elif self.translationEnabled and self.reply and message.author.display_name == 'RoBot':
+            time.sleep(1)
+            await message.channel.send('rob quote context')
+            self.reply = False
 
     async def translate(self,message:Message):
         if self.translationEnabled and randint(0, self.translationFrequency) == 1:
@@ -46,37 +53,8 @@ class JamesTheSheep(discord.Client):
             result = translator.translate(message.content, dest='cy')
             await message.channel.send('Did you know you could say it in welsh like this: ```' + result.text + '```')
 
-    async def commands(self, message:Message,m:str):
-        command = m.lower().split(' ')
-        if command[0] == 'steal':
-            self.stealAttempts.append(message.author.name)
-            await message.channel.send('I\'m a none stealable you fool. -10 points to griffindor.')
-            return True
-        elif command[0] == 'setfrequency':
-            if len(command) >= 3 and command[1].isnumeric():
-                self.translationFrequency = int(command[1])
-                await message.channel.send('frequency now 1/' + command[1])
-                return True
-            else:
-                await message.channel.send('Invalid usage')
-                return True
-        elif command[0] == 'shutup':
-            self.translationEnabled = False
-            await  message.channel.send('Fine :( BAAAA')
-            return True
-        elif command[0] == 'resumetalking':
-            self.translationEnabled = True
-            await  message.channel.send('Yay :) BAAAA')
-            return True
-        elif command[0] == 'help':
-            await message.channel.send('shutup - tells James to shutup \n resumeTalking - tell james he can '
-                                       'talk.\n HowAreYou? -  asks him how he is '
-                                       '\n setfrequency X -  set frequency of his translation attempts.')
-            return True
-        return False
-
     async def converse(self,message:Message,m:str):
-        if m.lower() == 'How are you?':
+        if m.lower() == 'how are you?':
             result = 'Alive and well :) Baaaa\n'
             if self.translationEnabled:
                 result = result + 'I will translate every 1/' + str(self.translationFrequency) + ' messages.\n'
@@ -87,6 +65,54 @@ class JamesTheSheep(discord.Client):
             await message.channel.send(result)
             return True
         return False
+
+    async def runCommand(self, message: Message, m: str):
+        """Dispatch method"""
+        command = m.lower().split(' ')
+        # Get the method from 'self'. Default to a lambda.
+        method = getattr(self, 'cmd_' + str(command[0]), self.cmd_returnFalse)
+        # Call the method as we return it
+        return await method(message, command)
+
+    async def cmd_steal(self, message,command):
+        self.stealAttempts.append(message.author.display_name)
+        await message.channel.send('I\'m a none stealable you fool. -10 points to griffindor.')
+        return True
+
+    async def cmd_setfrequency(self,message,command):
+        if len(command) >= 2 and command[1].isnumeric():
+            self.translationFrequency = int(command[1])
+            await message.channel.send('frequency now 1/' + command[1])
+        else:
+            await message.channel.send('Invalid usage of setfrequency')
+        return True
+
+    async def cmd_(self,message,command):
+        self.translationEnabled = False
+        await  message.channel.send('Fine :( BAAAA')
+        return True
+
+    async def cmd_resumetalking(self,message,command):
+        self.translationEnabled = True
+        await  message.channel.send('Yay :) BAAAA')
+        return True
+
+    async def cmd_help(self,message,command):
+        await message.channel.send('shutup - tells James to shutup \n resumeTalking - tell james he can '
+                                   'talk.\n HowAreYou? -  asks him how he is '
+                                   '\n setfrequency X -  set frequency of his translation attempts.')
+        return True
+
+    async def cmd_reply(self,message,command):
+        self.reply = True
+        await message.channel.send('Will reply to rob when i next hear him.')
+        return True
+
+    async def cmd_returnFalse(self,message,command):
+        return False
+
+
+
 
 client = JamesTheSheep()
 client.run(TOKEN)
