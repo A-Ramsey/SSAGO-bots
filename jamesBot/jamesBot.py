@@ -14,6 +14,7 @@ class JamesTheSheep(discord.Client):
     def __init__(self, **options):
         self.translationFrequency = 30
         self.translationEnabled = True
+        self.stealAttempts = []
         super().__init__(**options)
 
     async def on_ready(self):
@@ -34,6 +35,7 @@ class JamesTheSheep(discord.Client):
                 await message.channel.send('I am here baaa')
                 return
             elif command[1] == 'steal':
+                self.stealAttempts.append(message.author.name)
                 await message.channel.send('I\'m a none stealable you fool. -10 points to griffindor.')
             elif command[1] == 'setfrequency':
                 if len(command) >= 3 and command[2].isnumeric():
@@ -50,9 +52,11 @@ class JamesTheSheep(discord.Client):
             elif command[1] == 'howareyou?':
                 m = 'Alive and well :) Baaaa\n'
                 if self.translationEnabled:
-                    m = m + 'I will translate every 1/'+ str(self.translationFrequency)
+                    m = m + 'I will translate every 1/'+ str(self.translationFrequency)+' messages\n'
                 else:
-                    m = m + 'I was told to shutup :( baaa please re-enable me... baaaa'
+                    m = m + 'I was told to shutup :( baaa please re-enable me... baaaa\n'
+                if len(self.stealAttempts) > 0:
+                    m = m + 'and these people have tried to steal me: ' + str(self.stealAttempts)
                 await message.channel.send(m)
             elif command[1] == 'help':
                 await message.channel.send('shutup - tells James to shutup \n resumeTalking - tell james he can '
