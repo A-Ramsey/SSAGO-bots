@@ -1,59 +1,27 @@
 import os
-import random
+from random import randint
 
 import discord
 from dotenv import load_dotenv
+from googletrans import Translator
 
-# 1
-from discord.ext import commands
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-# 2
-bot = commands.Bot(command_prefix='!')
+class CustomClient(discord.Client):
+    async def on_ready(self):
+        print(f'{self.user} has connected to Discord!')
 
-@bot.event
-async def on_ready():
-    print(f'{bot.user.name} has connected to Discord!')
+    async def on_message(self,message):
+        if message.author == client.user:
+            return
+        if randint(0, 30) == 1:
+            translator = Translator()
 
-@bot.command(name='99', help='Responds with a random quote from Brooklyn 99')
-async def nine_nine(ctx):
-    brooklyn_99_quotes = [
-        'I\'m the human form of the 💯 emoji.',
-        'Bingpot!',
-        (
-            'Cool. Cool cool cool cool cool cool cool, '
-            'no doubt no doubt no doubt no doubt.'
-        ),
-    ]
-
-    response = random.choice(brooklyn_99_quotes)
-    await ctx.send(response)
-
-@bot.command(name='roll_dice', help='Simulates rolling dice.')
-async def roll(ctx, number_of_dice: int, number_of_sides: int):
-    dice = [
-        str(random.choice(range(1, number_of_sides + 1)))
-        for _ in range(number_of_dice)
-    ]
-    await ctx.send(', '.join(dice))
-
-@bot.command(name='create-channel')
-@commands.has_role('admin')
-async def create_channel(ctx, channel_name='real-python'):
-    guild = ctx.guild
-    existing_channel = discord.utils.get(guild.channels, name=channel_name)
-    if not existing_channel:
-        print(f'Creating a new channel: {channel_name}')
-        await guild.create_text_channel(channel_name)
-
-@bot.event
-async def on_command_error(ctx, error):
-    if isinstance(error, commands.errors.CheckFailure):
-        await ctx.send('You do not have the correct role for this command.')
+            result = translator.translate(message.content,dest='cy')
+            await message.channel.send('Did you know you could say it in welsh like this: ```' + result.text + '```')
 
 
-
-
-bot.run(TOKEN)
+client = CustomClient()
+client.run(TOKEN)
