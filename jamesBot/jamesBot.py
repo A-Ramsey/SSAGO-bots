@@ -10,6 +10,12 @@ from googletrans import Translator
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
+def listPrint(l:[]):
+    m = ''
+    for t in l:
+        m = m + t + ' '
+    return m
+
 
 class JamesTheSheep(discord.Client):
 
@@ -27,7 +33,7 @@ class JamesTheSheep(discord.Client):
             return
 
         await self.translate(message)
-        print(message.author.display_name)
+        #print(message.author.display_name)
 
         if message.mentions and message.mentions[0].name == 'JamesTheSheep':
             m = message.content[22:].strip()
@@ -58,7 +64,8 @@ class JamesTheSheep(discord.Client):
             else:
                 result = result + 'I was told to shutup :( baaa please re-enable me... baaaa\n'
             if len(self.stealAttempts) > 0:
-                result = result + 'And these people have recently tried to steal me: ' + str(self.stealAttempts)
+                result = result + 'And these people have recently tried to steal me: ' + listPrint(self.stealAttempts) + '\n'
+            result = result + 'and how are you?'
             await message.channel.send(result)
             return True
         return False
@@ -94,10 +101,20 @@ class JamesTheSheep(discord.Client):
         await  message.channel.send('Yay :) BAAAA')
         return True
 
+    async def cmd_thanks(self,message,command):
+        await message.channel.send('You are Welcome :)')
+        return True
+
     async def cmd_help(self,message,command):
-        await message.channel.send('shutup - tells James to shutup \n resumeTalking - tell james he can '
-                                   'talk.\n HowAreYou? -  asks him how he is '
-                                   '\n setfrequency X -  set frequency of his translation attempts.')
+        await message.channel.send('```'
+                                   'Command\n'
+                                   'shutup - tells James to shutup \n'
+                                   'resumeTalking - tell james he can talk.\n'
+                                   'setfrequency X -  set frequency of his translation attempts.\n'
+                                   'help - displays this\n'
+                                   '\nConverse\n'
+                                   'How Are You? -  asks him how he is\n'
+                                   '```')
         return True
 
     async def cmd_returnFalse(self,message,command):
