@@ -17,7 +17,6 @@ class JamesTheSheep(discord.Client):
         self.translationFrequency = 30
         self.translationEnabled = True
         self.stealAttempts = []
-        self.reply = True
         super().__init__(**options)
 
     async def on_ready(self):
@@ -41,10 +40,8 @@ class JamesTheSheep(discord.Client):
                 print('did as instructed')
             else:
                 await message.channel.send('Sorry but I didn\'t quite get that. baaaaaa')
-        elif self.translationEnabled and self.reply and message.author.display_name == 'RoBot':
-            time.sleep(1)
-            await message.channel.send('rob quote context')
-            self.reply = False
+        elif self.translationEnabled and message.author.display_name == 'RoBot' and randint(0, 1) == 1:
+            await message.channel.send('rob steal')
 
     async def translate(self,message:Message):
         if self.translationEnabled and randint(0, self.translationFrequency) == 1:
@@ -101,11 +98,6 @@ class JamesTheSheep(discord.Client):
         await message.channel.send('shutup - tells James to shutup \n resumeTalking - tell james he can '
                                    'talk.\n HowAreYou? -  asks him how he is '
                                    '\n setfrequency X -  set frequency of his translation attempts.')
-        return True
-
-    async def cmd_reply(self,message,command):
-        self.reply = True
-        await message.channel.send('Will reply to rob when i next hear him.')
         return True
 
     async def cmd_returnFalse(self,message,command):
