@@ -12,13 +12,14 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 
 class Response:
-    def __init__(self, response_message: str, response_parameters: [],action=None):
+    def __init__(self, response_message: str, response_parameters: []=[], action=None):
         self.responseMessage = response_message
         self.responseParameters = response_parameters
-        self.action=action
+        self.action = action
 
 
 robCommands = ['rob steal', 'rob quote context', 'rob catch']
+leoCommands = ['?leo steal','?leo git','?leo rally', '?leo sally']
 thingsToDo = ['hopping over to minecraft.ssago.org',
               'joining in on or run a virtual event',
               'playing Cards Humanity with rob and some friends.',
@@ -36,32 +37,93 @@ thingsToDo = ['hopping over to minecraft.ssago.org',
               'discuss some tv on the tv channel',
               'develop a mascotBot to talk to be my friend',
               ]
-def how_am_i(j, message:Message):
+
+
+def how_am_i(j, message: Message):
     if j.translationEnabled:
         result = 'I will translate every 1/' + str(j.translationFrequency) + ' messages.\n'
     else:
-        result =  'I was told to shutup :( baaa please re-enable me... baaaa\n'
+        result = 'I was told to shutup :( baaa please re-enable me... baaaa\n'
     if len(j.stealAttempts) > 0:
         result = result + 'And these people have recently tried to steal me: ' + listPrint(j.stealAttempts)
     return result
 
-def friend(j,message:Message):
+
+def friend(j, message: Message):
     if message.author.mention in j.friends:
         return 'I am already your friend! baaaa'
     else:
         j.friends.add(message.author.mention)
         return 'sure you can! baaaaa'
 
+def cmd_catch(j, message):
+        f = j.friends.pop()
+        j.friends.add(f)
+        return f
+
+
+def cmd_shutup(self, message):
+        self.translationEnabled = False
+
+
+def cmd_resumetalking(self, message):
+        self.translationEnabled = True
+
+
+def cmd_steal(j, message):
+        j.stealAttempts.append(message.author.mention)
+        if message.author.mention in j.friends:
+            j.friends.discard(message.author.mention)
+            return 'I thought you were my friend!'
+        return 'I\'m a none stealable you fool. -10 points to griffindor.'
+
+PARAM_MENTION = 'mention'
+PARAM_THINGS = 'thingstodo'
+PARAM_ACTION_RESULT = 'actionresult'
+PARAM_FRIENDS = 'friends'
+
 messages = {
-    'i am good': Response('{0} Well that\'s nice to see, maybe you could try {1} to make your day even better.',['mention', 'thingstodo']),
-    'i am not good': Response('{0} oh no, might I suggest that you {1} to cheer you up?', ['mention', 'thingstodo']),
-    'i am excellent': Response('{0} Awesome, maybe you can spread your joy by {1}.', ['mention', 'thingstodo']),
-    'what can i do around here?': Response('{0} You could {1}.', ['mention', 'thingstodo']),
-    'who are your friends': Response('I am friends with: {0}', ['friends']),
-    'who are you?': Response('I am one of MSAGM Aber SSAGO\'s mascots, I normally reside with the Secretary.\nI am friends with {0}',['friends']),
-    'how are you': Response('Alive and well :) Baaaa.\n{0} and how are you?', ['actionresult'], action=how_am_i),
-    'can i be your friend': Response('{0}',['actionresult'],action=friend)
+    'i am good': Response('{0} Well that\'s nice to see, maybe you could try {1} to make your day even better.',
+                          [PARAM_MENTION, PARAM_THINGS]),
+    'i am not good': Response('{0} oh no, might I suggest that you {1} to cheer you up?', [PARAM_MENTION, PARAM_THINGS]),
+    'i am excellent': Response('{0} Awesome, maybe you can spread your joy by {1}.', [PARAM_MENTION, PARAM_THINGS]),
+    'what can i do around here?': Response('{0} You could {1}.', [PARAM_MENTION, PARAM_THINGS]),
+    'who are your friends': Response('I am friends with: {0}', [PARAM_FRIENDS]),
+    'who are you?': Response(
+        'I am one of MSAGM Aber SSAGO\'s mascots, I normally reside with the Secretary.\nI am friends with {0}',
+        [PARAM_FRIENDS]),
+    'how are you': Response('Alive and well :) Baaaa.\n{0} and how are you?', [PARAM_ACTION_RESULT], action=how_am_i),
+    'can i be your friend': Response('{0}', [PARAM_ACTION_RESULT], action=friend),
+    'help': Response('```\n'
+                     'Command\n'
+                     'shutup - tells James to shutup \n'
+                     'catch -  catches the ball and throws it to a friend\n'
+                     'resumeTalking - tell james he can talk.\n'
+                     'setfrequency X -  set frequency of his translation attempts.\n'
+                     'help - displays this\n'
+                     '\nConverse\n'
+                     'How Are You?\n'
+                     'I am good | I am bad | I am excellent.\n'
+                     'Who are you?\n'
+                     'Can I be your friend?\n'
+                     'Who are your friends?\n'
+                     'What can I do around here?\n'
+                     'Say hello to Oli\n'
+                     'Hi'
+                     '```'),
+    'thanks':Response('You\'re Welcome'),
+    'hello':Response('Hello {0}',[PARAM_MENTION]),
+    'hi':Response('Hi'),
+    'catch':Response('James catches the ball, and throws it to {0}',[PARAM_ACTION_RESULT],action=cmd_catch),
+    'resumetalking':Response('Yay :) BAAAA',action=cmd_resumetalking),
+    'shutup':Response('Fine :( BAAAA',action=cmd_shutup),
+    'shut up':Response('Fine :( BAAAA',action=cmd_shutup),
+    'steal':Response('{0}',[PARAM_ACTION_RESULT],action=cmd_steal),
+    'say hello to oli':Response('Hi <@678903558828982274>'),
+    'do you have a brain':Response('Sort of...: https://github.com/RamseyTheCyclist/SSAGO-bots')
 }
+
+
 
 def listPrint(l: []):
     m = ''
@@ -76,7 +138,7 @@ class JamesTheSheep(discord.Client):
         self.translationFrequency = 30
         self.translationEnabled = True
         self.stealAttempts = []
-        self.friends = {'<@690257560531763204>', '<@678903558828982274>', '<@689981551534014576>'}
+        self.friends = {'<@690257560531763204>', '<@678903558828982274>', '<@689981551534014576>', '<@689751502700675072>'}
         super().__init__(**options)
 
     async def on_ready(self):
@@ -96,7 +158,13 @@ class JamesTheSheep(discord.Client):
                 self.friends.add(f)
             elif randint(0, 10) == 1:
                 time.sleep(1)
-                await message.channel.send(robCommands[randint(0, 2)])
+                await message.channel.send(robCommands[randint(0, len(robCommands)-1)])
+        elif self.translationEnabled and message.author.display_name == 'Leo the Lion':
+            if message.content.startswith('Ro'):
+                await message.channel.send('AHHH, Run away from Leo!')
+            elif randint(0,10) ==1:
+                time.sleep(1)
+                await message.channel.send(leoCommands[randint(0, len(leoCommands)-1)])
         elif message.mentions and message.mentions[0].name == 'JamesTheSheep':
             m = message.content[22:].strip()
             print(m)
@@ -126,26 +194,24 @@ class JamesTheSheep(discord.Client):
         m = m.lower()
         for n in messages.keys():
             if m.startswith(n):
-                response:Response = messages.get(n)
+                response: Response = messages.get(n)
                 response_parameters = response.responseParameters
                 action_result = ''
                 if response.action is not None:
-                    action_result = response.action(self,message)
-                for i,j in enumerate(response.responseParameters):
-                    if j == 'mention':
+                    action_result = response.action(self, message)
+                for i, j in enumerate(response.responseParameters):
+                    if j == PARAM_MENTION:
                         response_parameters[i] = message.author.mention
-                    elif j == 'friends':
+                    elif j == PARAM_FRIENDS:
                         response_parameters[i] = listPrint(self.friends)
-                    elif j == 'thingstodo':
-                        response_parameters[i] = thingsToDo[randint(0,len(thingsToDo)-1)]
-                    elif j == 'actionresult':
+                    elif j == PARAM_THINGS:
+                        response_parameters[i] = thingsToDo[randint(0, len(thingsToDo) - 1)]
+                    elif j == PARAM_ACTION_RESULT:
                         response_parameters[i] = action_result
 
                 await message.channel.send(response.responseMessage.format(*response_parameters))
                 return True
         return False
-
-
 
     async def runCommand(self, message: Message, m: str):
         """Dispatch method"""
@@ -154,14 +220,6 @@ class JamesTheSheep(discord.Client):
         method = getattr(self, 'cmd_' + str(command[0]), self.returnFalse)
         # Call the method as we return it
         return await method(message, command)
-
-    async def cmd_steal(self, message, command):
-        self.stealAttempts.append(message.author.mention)
-        if message.author.mention in self.friends:
-            self.friends.discard(message.author.mention)
-            await message.channel.send('I thought you were my friend!')
-        await message.channel.send('I\'m a none stealable you fool. -10 points to griffindor.')
-        return True
 
     async def cmd_setfrequency(self, message, command):
         if len(command) >= 2 and command[1].isnumeric():
@@ -172,48 +230,8 @@ class JamesTheSheep(discord.Client):
             await message.channel.send('Invalid usage of setfrequency')
         return True
 
-    async def cmd_catch(self, message, command):
-        f = self.friends.pop()
-        await message.channel.send('James catches the ball, and throws it to ' + f)
-        self.friends.add(f)
-        return True
-
-    async def cmd_shutup(self, message, command):
-        self.translationEnabled = False
-        await  message.channel.send('Fine :( BAAAA')
-        return True
-
-    async def cmd_resumetalking(self, message, command):
-        self.translationEnabled = True
-        await  message.channel.send('Yay :) BAAAA')
-        return True
-
-    async def cmd_thanks(self, message, command):
-        await message.channel.send('You are Welcome :)')
-        return True
-
-    async def cmd_help(self, message, command):
-        await message.channel.send('```\n'
-                                   'Command\n'
-                                   'shutup - tells James to shutup \n'
-                                   'catch -  catches the ball and throws it to a friend\n'
-                                   'resumeTalking - tell james he can talk.\n'
-                                   'setfrequency X -  set frequency of his translation attempts.\n'
-                                   'help - displays this\n'
-                                   '\nConverse\n'
-                                   'How Are You?\n'
-                                   'I am good | I am bad | I am excellent.\n'
-                                   'Who are you?\n'
-                                   'Can I be your friend?\n'
-                                   'Who are your friends?\n'
-                                   'What can I do around here?\n'
-                                   '```')
-        return True
-
     async def returnFalse(self, message, command):
         return False
-
-
 
 
 client = JamesTheSheep()
