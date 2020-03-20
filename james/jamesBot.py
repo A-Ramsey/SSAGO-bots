@@ -15,8 +15,9 @@ from james.messages import messages,Response,PARAM_THINGS,PARAM_FRIENDS,PARAM_ME
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-robCommands = ['rob steal', 'rob quote context', 'rob catch', 'rob quote', 'rob random 100']
+robCommands = ['rob steal', 'rob quote context', 'rob catch', 'rob quote', 'rob random 100', 'rob faction join TheBestFaction', 'rob faction list']
 leoCommands = ['?leo steal', '?leo git', '?leo rally', '?leo sally']
+rexCommands = ['good rex','bad rex','!witan']
 
 
 class JamesTheSheep(discord.Client):
@@ -55,6 +56,10 @@ class JamesTheSheep(discord.Client):
             elif randint(0, 10) == 1:
                 time.sleep(1)
                 await message.channel.send(leoCommands[randint(0, len(leoCommands) - 1)])
+        elif self.translationEnabled and message.author.display_name == 'Rex O\'Saurus':
+            if randint(0, 10) == 1:
+                time.sleep(1)
+                await message.channel.send(rexCommands[randint(0, len(rexCommands) - 1)])
         elif message.mentions and message.mentions[0].name == 'JamesTheSheep':
             m = message.content[22:].strip()
             print(m)
