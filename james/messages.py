@@ -1,3 +1,5 @@
+from random import randint
+
 from discord import Message
 
 def listPrint(l: []):
@@ -34,7 +36,7 @@ def friend(j, message: Message):
         return 'I am already your friend! baaaa'
     else:
         j.friends.add(message.author.mention)
-        return 'sure you can! baaaaa'
+        return 'sure you can be my friend! baaaaa'
 
 
 def cmd_catch(j, message):
@@ -58,6 +60,12 @@ def cmd_steal(j, message):
         return 'I thought you were my friend!'
     return 'I\'m a none stealable you fool. -10 points to griffindor.'
 
+def cmd_cah_play(j,messaage):
+    return randint(1,9)
+
+def cmd_cah_play2(j,messaage):
+    return randint(0,2)
+
 messages = {
     'i am good': Response('{0} Well that\'s nice to see, maybe you could try {1} to make your day even better.',
                           [PARAM_MENTION, PARAM_THINGS]),
@@ -71,14 +79,17 @@ messages = {
         [PARAM_FRIENDS]),
     'how are you': Response('Alive and well :) Baaaa.\n{0} and how are you?', [PARAM_ACTION_RESULT], action=how_am_i),
     'can i be your friend': Response('{0}', [PARAM_ACTION_RESULT], action=friend),
-    'help': Response('```\n'
+    'help': Response(''
                      'Command\n'
+                     '```\n'
                      'shutup - tells James to shutup \n'
-                     'catch -  catches the ball and throws it to a friend\n'
                      'resumeTalking - tell james he can talk.\n'
                      'setfrequency X -  set frequency of his translation attempts.\n'
+                     'say XXXX - echo back everything after the say\n'
                      'help - displays this\n'
-                     '\nConverse\n'
+                     '```\n'
+                     'Converse\n'
+                     '```\n'
                      'How Are You?\n'
                      'I am good | I am bad | I am excellent.\n'
                      'Who are you?\n'
@@ -87,10 +98,17 @@ messages = {
                      'What can I do around here?\n'
                      'Say hello to Oli\n'
                      'Hi\n'
+                     'catch\n'
                      'Do you have a brain?\n'
                      'I\'m tired\n'
                      'Tell a joke | I want a good laugh | cheer me up\n'
                      'It\'s cold out here.\n'
+                     'who is your creator\n'
+                     'I have a problem with you\n'
+                     '```\n'
+                     'Robs CAH\n'
+                     '```\n'
+                     'your turn at cah|pick a winner at cah|join cah'
                      '```'),
     'thanks': Response('You\'re Welcome'),
     'hello': Response('Hello {0}', [PARAM_MENTION]),
@@ -107,5 +125,13 @@ messages = {
     'i want a good laugh': Response('{0}', [PARAM_JOKE]),
     'cheer me up':Response('{0}',[PARAM_JOKE]),
     'greetings':Response('Who? me?'),
-    'it\'s cold out here':Response('Brrrrr')
+    'it\'s cold out here':Response('Brrrrr'),
+    'who is your creator':Response('<@!167015781652103169>'),
+    'i have a problem with you':Response('well please report it to <@!167015781652103169>'),
+    'i don\'t like you':Response('{0}',[PARAM_ACTION_RESULT],action=friend),
+    'no stop':Response('Stop what?'),
+    'I want to steal you':Response('{0}', [PARAM_ACTION_RESULT], action=cmd_steal),
+    'your turn at cah':Response('rob cah play {0}',[PARAM_ACTION_RESULT],action=cmd_cah_play),
+    'pick a winner at cah':Response('rob cah choose {0}',[PARAM_ACTION_RESULT],action=cmd_cah_play2),
+    'join cah':Response('rob cah join'),
 }

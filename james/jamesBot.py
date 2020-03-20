@@ -15,7 +15,7 @@ from james.messages import messages,Response,PARAM_THINGS,PARAM_FRIENDS,PARAM_ME
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-robCommands = ['rob steal', 'rob quote context', 'rob catch']
+robCommands = ['rob steal', 'rob quote context', 'rob catch', 'rob quote', 'rob random 100']
 leoCommands = ['?leo steal', '?leo git', '?leo rally', '?leo sally']
 
 
@@ -44,6 +44,8 @@ class JamesTheSheep(discord.Client):
                 f = self.friends.pop()
                 await message.channel.send('James catches the ball, and throws it to ' + f)
                 self.friends.add(f)
+            elif message.content == '<@!690154676938866719> steal':
+                await message.channel.send('We already talked about this, you can\'t steal me')
             elif randint(0, 10) == 1:
                 time.sleep(1)
                 await message.channel.send(robCommands[randint(0, len(robCommands) - 1)])
@@ -110,6 +112,13 @@ class JamesTheSheep(discord.Client):
         method = getattr(self, 'cmd_' + str(command[0]), self.returnFalse)
         # Call the method as we return it
         return await method(message, command)
+
+    async def cmd_say(selfself,message,command):
+        m = ''
+        for i in command[1:]:
+            m = m+ i + ' '
+        await message.channel.send(m)
+        return True
 
     async def cmd_setfrequency(self, message, command):
         if len(command) >= 2 and command[1].isnumeric():
