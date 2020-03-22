@@ -7,18 +7,14 @@ from discord import Message
 from dotenv import load_dotenv
 from googletrans import Translator
 
+from james.bot import bots
+from james.messages import Response, PARAM_MENTION, PARAM_FRIENDS, listPrint, PARAM_THINGS, PARAM_ACTION_RESULT, \
+    PARAM_JOKE, messages
 from james.thingstodo import thingsToDo
 from james.jokes import jokes
 
-from james.messages import messages,Response,PARAM_THINGS,PARAM_FRIENDS,PARAM_MENTION,PARAM_ACTION_RESULT,PARAM_JOKE,listPrint
-
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-
-robCommands = ['rob steal', 'rob quote context', 'rob catch', 'rob quote', 'rob random 100', 'rob faction join TheBestFaction', 'rob faction list']
-leoCommands = ['?leo steal', '?leo git', '?leo rally', '?leo sally']
-rexCommands = ['good rex','bad rex','!witan']
-
 
 class JamesTheSheep(discord.Client):
 
@@ -39,38 +35,47 @@ class JamesTheSheep(discord.Client):
 
         print(message.author.display_name, message.author.mention)
 
-        if self.translationEnabled and message.author.display_name == 'RoBot':
-            print(message.content)
-            if message.content == 'Rob catches the ball, and throws it to <@!690154676938866719>':
+        #talk to other bots
+        for bot in bots:
+            if self.translationEnabled and message.author.display_name == bot.display_name:
+                if message.content == '<@!690154676938866719> steal':
+                    await message.channel.send('We already talked about this, you can\'t steal me')
+                elif 'catches the ball, and throws it to <@!690154676938866719>' in message.content:
+                    f = self.friends.pop()
+                    await message.channel.send('James catches the ball, and throws it to ' + f)
+                    for catchableBot in bots:
+                        if f == catchableBot.display_name and catchableBot.catchCMD is not None:
+                            await message.channel.send(catchableBot.catchCMD)
+                            break
+                    self.friends.add(f)
+                elif 'Ro' in message.content:
+                    await message.channel.send('baaaaaa, run away!')
+                elif randint(0, 10) == 1:
+                    time.sleep(1)
+                    await message.channel.send(bot.getRandomCommand())
+                return
+
+        #reply to messages
+        if message.mentions and message.mentions[0].name == 'JamesTheSheep':
+            if 'catches the ball, and throws it to <@690154676938866719>' in message.content or '<@690154676938866719> catch' in message.content:
                 f = self.friends.pop()
                 await message.channel.send('James catches the ball, and throws it to ' + f)
+                for catchableBot in bots:
+                    if f == catchableBot.mention and catchableBot.catchCMD is not None:
+                        await message.channel.send(catchableBot.catchCMD)
+                        break
                 self.friends.add(f)
-            elif message.content == '<@!690154676938866719> steal':
-                await message.channel.send('We already talked about this, you can\'t steal me')
-            elif randint(0, 10) == 1:
-                time.sleep(1)
-                await message.channel.send(robCommands[randint(0, len(robCommands) - 1)])
-        elif self.translationEnabled and message.author.display_name == 'Leo the Lion':
-            if message.content.startswith('Ro'):
-                await message.channel.send('AHHH, Run away from Leo!')
-            elif randint(0, 10) == 1:
-                time.sleep(1)
-                await message.channel.send(leoCommands[randint(0, len(leoCommands) - 1)])
-        elif self.translationEnabled and message.author.display_name == 'Rex O\'Saurus':
-            if randint(0, 10) == 1:
-                time.sleep(1)
-                await message.channel.send(rexCommands[randint(0, len(rexCommands) - 1)])
-        elif message.mentions and message.mentions[0].name == 'JamesTheSheep':
-            m = message.content[22:].strip()
-            print(m)
-            if len(m) == 0:
-                await message.channel.send('Hi, I\'m here. baaaa')
-            elif await self.converse(message, m):
-                print('was social')
-            elif await self.runCommand(message, m):
-                print('did as instructed')
             else:
-                await message.channel.send('Sorry but I didn\'t quite get that. baaaaaa')
+                m = message.content[22:].strip()
+                print(m)
+                if len(m) == 0:
+                    await message.channel.send('Hi, I\'m here. baaaa')
+                elif await self.converse(message, m):
+                    print('was social')
+                elif await self.runCommand(message, m):
+                    print('did as instructed')
+                else:
+                    await message.channel.send('Sorry but I didn\'t quite get that. baaaaaa')
         else:
             await self.translate(message)
 
@@ -90,10 +95,12 @@ class JamesTheSheep(discord.Client):
         for n in messages.keys():
             if m.startswith(n):
                 response: Response = messages.get(n)
-                response_parameters = response.responseParameters
+                response_parameters = response.responseParameters.copy()
                 action_result = ''
                 if response.action is not None:
-                    action_result = response.action(self, message)
+                    a = response.action
+                    action_result = a(self,message)
+                    print(action_result)
                 for i, j in enumerate(response.responseParameters):
                     if j == PARAM_MENTION:
                         response_parameters[i] = message.author.mention
@@ -102,6 +109,7 @@ class JamesTheSheep(discord.Client):
                     elif j == PARAM_THINGS:
                         response_parameters[i] = thingsToDo[randint(0, len(thingsToDo) - 1)]
                     elif j == PARAM_ACTION_RESULT:
+                        print(action_result)
                         response_parameters[i] = action_result
                     elif j == PARAM_JOKE:
                         response_parameters[i] = jokes[randint(0, len(jokes) - 1)]
@@ -118,10 +126,10 @@ class JamesTheSheep(discord.Client):
         # Call the method as we return it
         return await method(message, command)
 
-    async def cmd_say(selfself,message,command):
+    async def cmd_say(self, message, command):
         m = ''
         for i in command[1:]:
-            m = m+ i + ' '
+            m = m + i + ' '
         await message.channel.send(m)
         return True
 
