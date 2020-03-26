@@ -32,7 +32,7 @@ async def on_error(event, *args, **kwargs):
 @bot.command(name='hi', help='Says hi to you')
 async def sayHello(ctx):
     sayingHello = [
-        "Hi, I'm Anwen",
+        "Hi, I'm Anwen, lol",
         "Hey, I'm the Quartermaster's mascot for MSAGM Aber SSAGO",
         "Sup, its ya boy Anwen",
     ]
