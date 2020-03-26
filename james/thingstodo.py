@@ -1,0 +1,18 @@
+thingsToDo = ['hopping over to minecraft.ssago.org',
+              'joining in on or run a virtual event',
+              'playing Cards Humanity with rob and some friends.',
+              'chat with some friends',
+              'try to steal other mascots',
+              'play skribbl',
+              'hop into a voice channel with your friends',
+              'go outside for some fresh air',
+              'have a nice bite to eat',
+              'cooking a chocolate brownie',
+              'cooking a homemade pizza',
+              'have a nice drink of water',
+              'checkout some photos on the photo channel',
+              'checkout some memes on the memes channel',
+              'discuss some tv on the tv channel',
+              'develop a mascotBot to talk to be my friend',
+              'try play catch with some of the mascots'
+              ]
