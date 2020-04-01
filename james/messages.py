@@ -109,6 +109,7 @@ messages = {
                      'map | How do I view the Minecraft map?\n'
                      'sport | How do I join the strava club? | Does ssago have a strava club?\n'
                      'bakeoff | How do I take part in the bakeoff?\n'
+                     'badges | How do I take part in the badges at home challenge?'
                      'good bot | bad bot\n'
                      '```\n'
                      'Robs CAH\n'
@@ -145,7 +146,9 @@ messages = {
     'how do i play minecraft':Response('Get the java edition\n register your username here: https://minecraft.ssago.org\n and in Minecraft 1.15.2 enter `minecraft.ssago.org` on the multiplayer screen'),
     'how do i view the minecraft map':Response('Go to this website: https://minecraft.ssago.org/map'),
     'map':Response('Go to this website: https://minecraft.ssago.org/map'),
-    'bakeoff':Response('Go to https://virtual.ssago.org/bakeoff for details'),
+    'bakeoff':Response('Go to https://virtual.ssago.org/bakeoff for details.'),
+    'badges':Response('Go to https://virtual.ssago.org/badges for details.'),
+    'how do i take part in the badges':Response('Go to https://virtual.ssago.org/badges for details.'),
     'how do i take part in the bakeoff':Response('Go to https://virtual.ssago.org/bakeoff for details'),
     'good bot':Response('why thank, you baaaa'),
     'bad bot':Response('Well no one is perfect, baaaa'),
