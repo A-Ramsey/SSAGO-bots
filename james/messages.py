@@ -107,7 +107,8 @@ messages = {
                      'I have a problem with you\n'
                      'How do I play Minecraft?\n'
                      'map | How do I view the Minecraft map?\n'
-                     'sport | How do I join the strava club? | Does ssago have a strava club?'
+                     'sport | How do I join the strava club? | Does ssago have a strava club?\n'
+                     'good bot | bad bot\n'
                      '```\n'
                      'Robs CAH\n'
                      '```\n'
@@ -143,4 +144,6 @@ messages = {
     'how do i play minecraft':Response('Get the java edition\n register your username here: minecraft.ssago.org\n and in Minecraft 1.15.2 enter `minecraft.ssago.org` on the multiplayer screen'),
     'how do i view the minecraft map':Response('Go to this website: https://minecraft.ssago.org/map'),
     'map':Response('Go to this website: https://minecraft.ssago.org/map'),
+    'good bot':Response('why thank, you baaaa'),
+    'bad bot':Response('Well no one is perfect, baaaa'),
 }
