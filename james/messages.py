@@ -134,4 +134,10 @@ messages = {
     'your turn at cah':Response('rob cah play {0}',[PARAM_ACTION_RESULT],action=cmd_cah_play),
     'pick a winner at cah':Response('rob cah choose {0}',[PARAM_ACTION_RESULT],action=cmd_cah_play2),
     'join cah':Response('rob cah join'),
+    'how do i join the strava club':Response('find the strava club here: https://www.strava.com/clubs/SSAGO'),
+    'does ssago have a strava club':Response('find the strava club here: https://www.strava.com/clubs/SSAGO'),
+    'sport':Response('find the strava club here: https://www.strava.com/clubs/SSAGO'),
+    'how do i play minecraft':Response('Get the java edition\n register your username here: minecraft.ssago.org\n and in Minecraft 1.15.2 enter `minecraft.ssago.org` on the multiplayer screen'),
+    'how do i view the minecraft map':Response('Go to this website: https://minecraft.ssago.org/map'),
+    'map':Response('Go to this website: https://minecraft.ssago.org/map'),
 }
