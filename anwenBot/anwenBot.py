@@ -5,6 +5,7 @@
 import os, random
 
 import discord
+import psycopg2 as psycopg2
 from dotenv import load_dotenv
 
 from discord.ext import commands
@@ -12,11 +13,17 @@ from discord.ext import commands
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
+DATABASE_HOST = os.getenv('DATABASE_HOST')
+DATABASE_NAME = os.getenv('DATABASE_NAME')
+DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD')
+DATABASE_USERNAME = os.getenv('DATABASE_USERNAME')
+DATABASE_PORT = os.getenv('DATABASE_PORT')
 
 bot = commands.Bot(command_prefix=commands.when_mentioned) ##red is okay just pycharm doesnt like it
 
 atPhil = 0
 phil = ["<@353993682841763840>", "Phil"]
+
 
 @bot.event
 async def on_ready():
@@ -42,6 +49,13 @@ async def sayHello(ctx):
     response = random.choice(sayingHello)
     await ctx.send(response)
 
+def addToDB(id, scoreAdj):
+    print("in add to db")
+    conn = psycopg2.connect(host=DATABASE_HOST, database=DATABASE_NAME, user=DATABASE_USERNAME, password=DATABASE_PASSWORD, port=int(DATABASE_PORT))
+    curr = conn.cursor()
+    print(curr.execute("SELECT * WHERE id = %s", str(id)))
+
+
 def personWin(perGuess, botGuess):
     if (perGuess == "r" and botGuess == "s") or (perGuess == "s" and botGuess == "p") or (perGuess == "p" and botGuess == "r"):
         return 1
@@ -52,12 +66,12 @@ def personWin(perGuess, botGuess):
     else:
         return -99
 
-def addGuess(guess, bot):
+def addGuess(guess, bot, uid):
     response = ""
     if bot:
         response += "I"
     else:
-        response += "You"
+        response += "<@" + str(uid) +">"
     response += " guessed "
     if guess == "r":
         response += "rock"
@@ -71,6 +85,7 @@ def addGuess(guess, bot):
     return response
 
 def rps(ctx, guess: str):
+    print (ctx.author.id)
     rpsGuesses = ["r", "p", "s"]
     guess = guess.lower()
     botGuess = random.choice(rpsGuesses)
@@ -85,9 +100,9 @@ def rps(ctx, guess: str):
         guess = "err"
 
     winner = personWin(guess, botGuess)
-    response += addGuess(guess, False)
+    response += addGuess(guess, False, ctx.author.id)
     if winner != -99:
-        response += addGuess(botGuess, True)
+        response += addGuess(botGuess, True, 0)
 
     if winner == 1:
         response += "You Win!"
@@ -97,6 +112,8 @@ def rps(ctx, guess: str):
         response += "I win!"
     elif winner == -99:
         response += "Try a valid guess next time!"
+
+    #addToDB(ctx.author.id, 1)
 
     return response
 
@@ -192,9 +209,15 @@ async def dontAtPhilOnMessage(ctx):
     await ctx.send(response)
 
 @bot.command(name='lost', help='Tells you who lost him')
-async def on_message(ctx):
+async def lost(ctx):
     global atPhil
     response = phil[atPhil] + " lost me"
     await ctx.message.channel.send(response)
+
+
+# async def on_message(message):
+#     await bot.process_commands(message)
+#     print("I'mk running")
+#     await message.add_reaction(':mainlogo:')
 
 bot.run(TOKEN)

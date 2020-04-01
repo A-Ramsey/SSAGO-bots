@@ -9,6 +9,7 @@ verify_ssl = true
 discord = "*"
 python-dotenv = "*"
 googletrans = "*"
+psycopg2 = "*"
 
 [requires]
 python_version = "3.7"
