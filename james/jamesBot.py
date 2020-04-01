@@ -48,7 +48,7 @@ class JamesTheSheep(discord.Client):
                             await message.channel.send(catchableBot.catchCMD)
                             break
                     self.friends.add(f)
-                elif 'Ro' in message.content:
+                elif message.author.mention == '<@689751502700675072>' and 'Ro' in message.content:
                     await message.channel.send('baaaaaa, run away!')
                 elif randint(0, 10) == 1:
                     time.sleep(1)

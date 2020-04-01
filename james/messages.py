@@ -146,4 +146,5 @@ messages = {
     'map':Response('Go to this website: https://minecraft.ssago.org/map'),
     'good bot':Response('why thank, you baaaa'),
     'bad bot':Response('Well no one is perfect, baaaa'),
+    'opinion':Response('Everybody is awesome, including the bots that sometimes ignore me.')
 }
