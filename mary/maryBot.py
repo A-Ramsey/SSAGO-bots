@@ -21,7 +21,7 @@ class Bot(commands.Bot):
 
 bot = Bot(command_prefix=commands.when_mentioned)
 
-bot.load_extension("cogs.mctour")
+bot.load_extension("mary.cogs.mctour")
 
 
 @bot.event
