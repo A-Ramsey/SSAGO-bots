@@ -105,6 +105,12 @@ messages = {
                      'It\'s cold out here.\n'
                      'who is your creator\n'
                      'I have a problem with you\n'
+                     'How do I play Minecraft?\n'
+                     'map | How do I view the Minecraft map?\n'
+                     'sport | How do I join the strava club? | Does ssago have a strava club?\n'
+                     'bakeoff | How do I take part in the bakeoff?\n'
+                     'badges | How do I take part in the badges at home challenge?'
+                     'good bot | bad bot\n'
                      '```\n'
                      'Robs CAH\n'
                      '```\n'
@@ -134,4 +140,18 @@ messages = {
     'your turn at cah':Response('rob cah play {0}',[PARAM_ACTION_RESULT],action=cmd_cah_play),
     'pick a winner at cah':Response('rob cah choose {0}',[PARAM_ACTION_RESULT],action=cmd_cah_play2),
     'join cah':Response('rob cah join'),
+    'how do i join the strava club':Response('find the strava club here: https://www.strava.com/clubs/SSAGO'),
+    'does ssago have a strava club':Response('find the strava club here: https://www.strava.com/clubs/SSAGO'),
+    'sport':Response('find the strava club here: https://www.strava.com/clubs/SSAGO'),
+    'how do i play minecraft':Response('Get the java edition\n register your username here: https://minecraft.ssago.org\n and in Minecraft 1.15.2 enter `minecraft.ssago.org` on the multiplayer screen'),
+    'how do i view the minecraft map':Response('Go to this website: https://minecraft.ssago.org/map'),
+    'map':Response('Go to this website: https://minecraft.ssago.org/map'),
+    'bakeoff':Response('Go to https://virtual.ssago.org/bakeoff for details.'),
+    'badges':Response('Go to https://virtual.ssago.org/badges for details.'),
+    'how do i take part in the badges':Response('Go to https://virtual.ssago.org/badges for details.'),
+    'how do i take part in the bakeoff':Response('Go to https://virtual.ssago.org/bakeoff for details'),
+    'good bot':Response('why thank, you baaaa'),
+    'bad bot':Response('Well no one is perfect, baaaa'),
+    'opinion':Response('Everybody is awesome, including the bots that sometimes ignore me.'),
+
 }

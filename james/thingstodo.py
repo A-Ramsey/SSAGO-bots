@@ -14,5 +14,6 @@ thingsToDo = ['hopping over to minecraft.ssago.org',
               'checkout some memes on the memes channel',
               'discuss some tv on the tv channel',
               'develop a mascotBot to talk to be my friend',
-              'try play catch with some of the mascots'
+              'try play catch with some of the mascots',
+              'go out and do some sport, you could record it and join the SSAGO Strava club here: https://www.strava.com/clubs/SSAGO '
               ]
