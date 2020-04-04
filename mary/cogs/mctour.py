@@ -63,7 +63,7 @@ class McTour(commands.Cog):
             await ctx.send('No Project by this name')
         else:
             reviews = review.select_reviews_by_project(self.db,name)
-            await ctx.send("{0}\n {1}".format(ps,listPrint(reviews)))
+            await ctx.send("{0}{1}".format(ps,listPrint(reviews)))
 
     @commands.command()
     async def projects(self,ctx:Context):
@@ -72,7 +72,10 @@ class McTour(commands.Cog):
         if ps is None or len(ps) == 0:
             await ctx.send('No Projects available')
         else:
-            await ctx.send(listPrint(ps))
+            out = ''
+            for l in ps:
+                out = out + str(l.name) + '\n'
+            await ctx.send(out)
 
     @commands.command()
     async def next(self,ctx:Context):
@@ -82,5 +85,5 @@ class McTour(commands.Cog):
             await ctx.send('No Projects available')
         else:
             reviews = review.select_reviews_by_project(self.db, ps.name)
-            await ctx.send("{0}\n {1}".format(ps, listPrint(reviews)))
+            await ctx.send("{0}{1}".format(ps, listPrint(reviews)))
 
