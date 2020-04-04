@@ -44,4 +44,9 @@ async def hi(ctx: Context):
     """says hello"""
     await ctx.send('Hello there!')
 
+@bot.command()
+async def git(ctx):
+    """link to the bots git"""
+    await ctx.send('https://github.com/RamseyTheCyclist/SSAGO-bots')
+
 bot.run(TOKEN)

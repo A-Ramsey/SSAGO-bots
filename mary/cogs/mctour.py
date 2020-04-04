@@ -25,6 +25,11 @@ class McTour(commands.Cog):
 
 
     @commands.command()
+    async def mctour(self,ctx:Context):
+        await ctx.send('Track and review various Minecraft project with my commands in this category, or use my knowledge to get a guided tour of the SSAGO minecraft server!')
+
+
+    @commands.command()
     async def project(self,ctx:Context,name:str,warp:str, map_url:str, *, description:str):
         """
         add or update a project
