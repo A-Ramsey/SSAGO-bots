@@ -15,7 +15,7 @@ class Bot:
 bots = [
     Bot('RoBot', ['rob steal', 'rob quote context', 'rob catch', 'rob quote', 'rob random 100',
                   'rob faction join TheBestFaction', 'rob faction list'], '<@689981551534014576>', 'rob catch'),
-    Bot('Leo the Lion', ['?leo steal', '?leo git', '?leo rally', '?leo sally', '?leo translate'],
+    Bot('Leo the Lion', ['<@689751502700675072> steal', '<@689751502700675072> git', '<@689751502700675072> rally', '<@689751502700675072> sally', '<@689751502700675072> translate'],
         '<@689751502700675072>', '<@689751502700675072> catch'),
     Bot('Pablo the Pug', ['pablo.fetch', 'pablo.catch'], '<@690960331584831579>', 'pablo.catch'),
     Bot('Rex O\'Saurus', ['good rex', 'bad rex', '!witan'], '<@689409878162145280>', 'rex catch'),
