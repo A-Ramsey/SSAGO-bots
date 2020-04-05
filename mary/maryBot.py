@@ -25,7 +25,7 @@ bot.load_extension("mary.cogs.mctour")
 
 @bot.event
 async def on_ready():
-    print(f'{bot.user.name} has connected to Discord!')
+    logging.info(f'{bot.user.name} has connected to Discord!')
 
 
 @bot.event
