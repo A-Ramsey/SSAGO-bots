@@ -34,6 +34,8 @@ async def on_command_error(ctx, error):
         await ctx.send('You do not have the correct role for this command.')
     elif isinstance(error, commands.errors.MissingRequiredArgument):
         await ctx.send('You are missing a required argument.')
+    elif isinstance(error, commands.errors.CommandNotFound):
+        await ctx.send('Pardon, I didn\'t quite get that.')
     else:
         await ctx.send('something went wrong, please contact the Admin')
         logging.error(error)

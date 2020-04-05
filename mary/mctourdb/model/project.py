@@ -1,3 +1,5 @@
+from mary.mctourdb.model import review
+
 sql_create_projects_table = """ CREATE TABLE IF NOT EXISTS projects (
                                         name text PRIMARY KEY,
                                         warp text,
@@ -48,6 +50,9 @@ class Project:
         self.mapURL = mapURL
         self.description = description
 
+    def edit_cmd(self):
+        return '{0} {1} {2} {3}'.format(self.name,self.warp,self.mapURL,self.description)
+
     def save_project(self, conn):
         """
         Create a new project into the projects table
@@ -73,6 +78,13 @@ class Project:
                 cur.execute(sql, (self.warp, self.mapURL, self.description,self.name))
                 conn.commit()
             return "Updated project"
+
+    def delete(self, conn):
+        sql = 'DELETE FROM projects WHERE name=?'
+        with conn:
+            cur = conn.cursor()
+            cur.execute(sql, (self.name,))
+        review.delete_by_project_id(conn,self.name)
 
     def __str__(self) -> str:
         return """

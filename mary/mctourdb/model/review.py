@@ -19,7 +19,7 @@ def select_reviews_by_project(conn,project_id):
         :return: Project
         """
     cur = conn.cursor()
-    cur.execute("SELECT * FROM reviews WHERE project_id=?", (project_id,))
+    cur.execute("SELECT * FROM reviews WHERE project_id=? ORDER BY RANDOM() LIMIT 5", (project_id,))
 
     rows = cur.fetchall()
     reviews = []
@@ -43,6 +43,12 @@ def select_review_by_author_and_project(conn,author,project_id):
         return Review(*(rows[0]))
     else:
         return None
+
+def delete_by_project_id(conn,name):
+    sql = 'DELETE FROM reviews WHERE project_id=?'
+    with conn:
+        cur = conn.cursor()
+        cur.execute(sql, (name,))
 
 
 class Review:

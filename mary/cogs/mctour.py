@@ -42,20 +42,20 @@ class McTour(commands.Cog):
         await ctx.send('{0}: {1}'.format(p.save_project(self.db),name))
 
     @commands.command()
-    async def review(self,ctx:Context,project_id:str,rating:int,*,description:str):
+    async def review(self, ctx:Context ,project_id:str ,rating:int,*,description:str):
         """
         add or update a review
         :param project_id: id of the project to review
         :param rating: rating out of 10 for the project
         :param description: description of the review
         """
-        r = review.Review(None,ctx.author.name,project_id,rating,description)
+        r = review.Review(None,ctx.author.display_name,project_id,rating,description)
         await ctx.send('{0} by {1} about {2}'.format(r.save_review(self.db),ctx.author.name,project_id))
 
     @commands.command()
     async def view(self,ctx:Context,name:str):
         """
-        view a project
+        view a project with up to 5 random reviews.
         :param name the projects name
         """
         ps = project.select_project_by_name(self.db, name)
@@ -64,6 +64,18 @@ class McTour(commands.Cog):
         else:
             reviews = review.select_reviews_by_project(self.db,name)
             await ctx.send("{0}{1}".format(ps,listPrint(reviews)))
+
+    @commands.command()
+    async def viewProjectCMD(self,ctx:Context,name:str):
+        """
+        View the command used to create the project entry so you can modify it and update the entry
+        :param name:
+        """
+        ps = project.select_project_by_name(self.db, name)
+        if ps is None:
+            await ctx.send('No Project by this name')
+        else:
+            await ctx.send("`project {0}`".format(ps.edit_cmd()))
 
     @commands.command()
     async def projects(self,ctx:Context):
@@ -76,6 +88,20 @@ class McTour(commands.Cog):
             for l in ps:
                 out = out + str(l.name) + '\n'
             await ctx.send(out)
+
+    @commands.command()
+    async def deleteProject(self,ctx:Context,name):
+        """
+        Not to be used lightly.
+        Will also delete all reviews for this project.
+        Maybe just try and update the project.
+        """
+        ps = project.select_project_by_name(self.db, name)
+        if ps is None:
+            await ctx.send('No Project by this name')
+        else:
+            ps.delete(self.db)
+            await ctx.send('deleted project:{0}'.format(ps))
 
     @commands.command()
     async def next(self,ctx:Context):
