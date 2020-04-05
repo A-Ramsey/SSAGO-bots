@@ -86,6 +86,7 @@ messages = {
                      'resumeTalking - tell james he can talk.\n'
                      'setfrequency X -  set frequency of his translation attempts.\n'
                      'say XXXX - echo back everything after the say\n'
+                     'translate <lang> <text> - translate text based on language code e.g translate cy how are you?'
                      'help - displays this\n'
                      '```\n'
                      'Converse\n'

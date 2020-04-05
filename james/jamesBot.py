@@ -1,5 +1,6 @@
 import os
 import time
+import logging
 from random import randint
 
 import discord
@@ -65,6 +66,20 @@ class JamesTheSheep(discord.Client):
                         await message.channel.send(catchableBot.catchCMD)
                         break
                 self.friends.add(f)
+            elif message.content.startswith('<@!690154676938866719> translate'):
+                m = message.content[33:]
+                #print(m)
+                lang = m[0:2]
+                #print(lang)
+                m = m[3:]
+                #print(m)
+                try:
+                    translator = Translator()
+                    result = translator.translate(m, dest=lang)
+                    await message.channel.send(
+                        'Translation: ```' + result.text + '```')
+                except:
+                    print('couldn\'t translate:', message.content)
             else:
                 m = message.content[22:].strip()
                 print(m)
