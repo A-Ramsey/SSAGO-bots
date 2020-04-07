@@ -66,20 +66,6 @@ class JamesTheSheep(discord.Client):
                         await message.channel.send(catchableBot.catchCMD)
                         break
                 self.friends.add(f)
-            elif message.content.startswith('<@!690154676938866719> translate'):
-                m = message.content[33:]
-                #print(m)
-                lang = m[0:2]
-                #print(lang)
-                m = m[3:]
-                #print(m)
-                try:
-                    translator = Translator()
-                    result = translator.translate(m, dest=lang)
-                    await message.channel.send(
-                        'Translation: ```' + result.text + '```')
-                except:
-                    print('couldn\'t translate:', message.content)
             else:
                 m = message.content[22:].strip()
                 print(m)
@@ -90,6 +76,7 @@ class JamesTheSheep(discord.Client):
                 elif await self.runCommand(message, m):
                     print('did as instructed')
                 else:
+                    print(message.content)
                     await message.channel.send('Sorry but I didn\'t quite get that. baaaaaa')
         else:
             await self.translate(message)
@@ -140,6 +127,21 @@ class JamesTheSheep(discord.Client):
         method = getattr(self, 'cmd_' + str(command[0]), self.returnFalse)
         # Call the method as we return it
         return await method(message, command)
+
+    async def cmd_translate(self, message, command):
+        lang = command[1]
+        m = message.content[35:]
+        try:
+            translator = Translator()
+            result = translator.translate(m, dest=lang)
+            await message.channel.send(
+            'Translation: ```' + result.text + '```')
+            return True
+        except:
+            logging.info('couldn\'t translate:', message.content)
+            return False
+
+
 
     async def cmd_say(self, message, command):
         m = ''
